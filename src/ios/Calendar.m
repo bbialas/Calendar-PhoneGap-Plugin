@@ -530,7 +530,7 @@
       pluginResult = [CDVPluginResult resultWithStatus: CDVCommandStatus_OK messageAsArray:eventsDataArray];
 
       [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-  }];  
+  }];
 }
 
 - (void)createEventWithOptions:(CDVInvokedUrlCommand*)command {
@@ -747,11 +747,17 @@
 
     self.interactiveCallbackId = command.callbackId;
 
-    EKEventEditViewController* controller = [[EKEventEditViewController alloc] init];
-    controller.event = myEvent;
-    controller.eventStore = self.eventStore;
-    controller.editViewDelegate = self;
+    // EKEventEditViewController* controller = [[EKEventEditViewController alloc] init];
+    // controller.event = myEvent;
+    // controller.eventStore = self.eventStore;
+    // controller.editViewDelegate = self;
     dispatch_async(dispatch_get_main_queue(), ^{
+        //Fix ios 15.1 -- Modifications to the layout engine must not be performed from a background thread after it has been accessed from the main thread
+        EKEventEditViewController* controller = [[EKEventEditViewController alloc] init];
+        controller.event = myEvent;
+        controller.eventStore = self.eventStore;
+        controller.editViewDelegate = self;
+        //Fix ios 15.1
         [self.viewController presentViewController:controller animated:YES completion:nil];
     });
   }];
